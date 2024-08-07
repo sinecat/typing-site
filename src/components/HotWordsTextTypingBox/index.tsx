@@ -45,21 +45,24 @@ const HotWordsTextTypingBox = () => {
         }
     }
 
+    const freshData = (_wordNums: number)=>{
+        setIsFinished(false)
+        setSuccessTextLength(0)
+        setTargetValue(getRandomData(textData, _wordNums))
+        setInputValue('')
+        reset()
+        setInputFocus()
+    }
+
     const handleWordNumsClick = (num: number) => {
         if (wordNums !== num) {
             setWordNums(num)
-            setTargetValue(getRandomData(textData, num))
-            setInputFocus()
+            freshData(num)
         }
     }
 
     const handleFreshClick = () => {
-        setIsFinished(false)
-        setSuccessTextLength(0)
-        setTargetValue(getRandomData(textData, wordNums))
-        setInputValue('')
-        reset()
-        setInputFocus()
+        freshData(wordNums)
     }
 
     const handleTextBoardClick = () => {
@@ -67,7 +70,7 @@ const HotWordsTextTypingBox = () => {
     }
 
     const handleKeyDown = (event: any) => {
-        if (event.key === 'Enter' && isFocus) {
+        if (event.key === 'Enter' && isFocus && !isFinished) {
             setInputting(true)
             start()
         }
