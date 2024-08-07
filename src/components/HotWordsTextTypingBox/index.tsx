@@ -11,6 +11,7 @@ import {Terminal} from "lucide-react";
 import {Badge} from "@/components/ui/badge";
 import {useToast} from "@/components/ui/use-toast";
 import './styles.css'
+import {Card} from "@/components/ui/card";
 
 const wordNumsConfig = [3, 20, 30, 40, 50]
 
@@ -45,7 +46,7 @@ const HotWordsTextTypingBox = () => {
         }
     }
 
-    const freshData = (_wordNums: number)=>{
+    const freshData = (_wordNums: number) => {
         setIsFinished(false)
         setSuccessTextLength(0)
         setTargetValue(getRandomData(textData, _wordNums))
@@ -118,7 +119,7 @@ const HotWordsTextTypingBox = () => {
 
     return (
         <div>
-            <div className='mt-5 p-2 items-start'>
+            <div className='mt-5 p-2 flex items-start justify-between'>
                 <div className="flex h-5 items-center space-x-4 font-semibold no-input cursor-pointer">
                     {
                         wordNumsConfig?.map((item, index) => {
@@ -137,23 +138,34 @@ const HotWordsTextTypingBox = () => {
                         })
                     }
                 </div>
+                <div className='result mr-40'>
+                    <div>Time: {time}S</div>
+                </div>
             </div>
             <div className='flex flex-col items-center'>
-                {isFinished ? '恭喜你，输入完成,用时：' + time : null}
-                <TextBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data}
-                           onClick={handleTextBoardClick}/>
-                <input type="text" value={inputValue} onChange={handleInputChange} className='text-input'
-                       ref={inputRef}
-                       onBlur={handleBlur} onKeyDown={handleKeyDown}/>
-                <Button className='w-30' onClick={handleFreshClick}>Refresh</Button>
-                {isFocus && !inputting ? <Alert className='w-80 mt-20 animate-bounce text-lg'>
-                    <Terminal className="h-4 w-5"/>
-                    <AlertTitle>Ready?</AlertTitle>
-                    <AlertDescription className='mt-2 text-lg'>
-                        Press <Badge className='bg-gray-100 text-black rounded text-lg font-light'>Enter</Badge> to
-                        start typing
-                    </AlertDescription>
-                </Alert> : null}
+                {
+                    isFinished ? <div className='flex gap-20 pt-20 min-h-72 text-3xl justify-between'>
+                        <Card className='flex h-36 flex-col gap-5 text-3xl items-center justify-center p-5'>
+                            <span className='no-input'>Take Time</span>
+                            <span className='text-4xl'>{time}S</span>
+                        </Card>
+                    </div> : <div className='flex flex-col items-center'>
+                    <TextBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data}
+                                   onClick={handleTextBoardClick}/>
+                        <input type="text" value={inputValue} onChange={handleInputChange} className='text-input'
+                               ref={inputRef}
+                               onBlur={handleBlur} onKeyDown={handleKeyDown}/>
+                        {isFocus && !inputting ?
+                            <Alert className='absolute top-0 w-80 mt-10 animate-bounce text-lg translate-y-96'>
+                                <AlertDescription className='text-lg'>
+                                    Press <Badge
+                                    className='bg-gray-100 text-black rounded text-lg font-light'>Enter</Badge> to
+                                    start typing
+                                </AlertDescription>
+                            </Alert> : null}
+                    </div>
+                }
+                <Button className='w-30 mt-5' onClick={handleFreshClick}>Refresh</Button>
             </div>
         </div>
     );

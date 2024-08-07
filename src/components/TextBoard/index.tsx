@@ -62,7 +62,7 @@ const TextBoard = (props: TextBoardProps) => {
         }, [targetValue])
 
         return (
-            <div className='w-[1024px]'>
+            <div className='w-[1024px] min-h-72'>
                 <div className='text-board flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
                     {focus ?
                         <div className='caret animate-opacity'
