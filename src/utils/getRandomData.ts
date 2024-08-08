@@ -9,6 +9,16 @@ export const getRandomData = (dataArr: any[], num: number) => {
     return {
         data: result,
         targetStr: result.map(item => item.value).join(''),
-        strLength: result.reduce((acc, cur) => acc + cur.value.length, 0)
+        strLength: result.reduce((acc, cur) => acc + cur.value.length, 0),
+        hotWordsLength: result.reduce((acc, cur) => acc + cur.text.length, 0)
+    }
+}
+
+export const getRandomDataSentence = (dataArr:string[]) => {
+    const randomIndex = Math.floor(Math.random() * dataArr.length);
+    const result =  dataArr[randomIndex];
+    return {
+        data:result,
+        length:result.length
     }
 }

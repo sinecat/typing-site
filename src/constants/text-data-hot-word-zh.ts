@@ -1,4 +1,9 @@
-export const textData = [
+export type textDataHotWordZhType = {
+    text:string,
+    value:string
+}
+
+export const textDataHotWordZh = [
     { text: "输入法", value: "shurufa" },
     { text: "键盘", value: "jianpan" },
     { text: "打字", value: "dazi" },

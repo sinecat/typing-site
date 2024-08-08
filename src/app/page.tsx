@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import HotWordsTextTypingBox from "@/components/HotWordsTextTypingBox";
+import SentenceTypingBox from "@/components/SentenceTypingBox";
 
 const Page = () => {
 
@@ -16,7 +17,9 @@ const Page = () => {
                     <TabsContent value="chinese">
                         <HotWordsTextTypingBox />
                     </TabsContent>
-                    <TabsContent value="english">Developing</TabsContent>
+                    <TabsContent value="english">
+                        <SentenceTypingBox />
+                    </TabsContent>
                 </Tabs>
             </div>
     );

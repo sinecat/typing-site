@@ -1,6 +1,5 @@
 'use client'
 import React, {ComponentProps, useEffect, useMemo, useRef, useState} from 'react';
-import './styles.css'
 import {TextDataType} from "@/constants/common";
 
 type TextBoardProps = ComponentProps<any> & {
@@ -63,9 +62,9 @@ const TextBoard = (props: TextBoardProps) => {
 
         return (
             <div className='w-[1024px] min-h-72'>
-                <div className='text-board flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
+                <div className='relative p-5 w-[1024px] flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
                     {focus ?
-                        <div className='caret animate-opacity bg-primary'
+                        <div className='absolute w-[3px] h-[30px] translate-y-[-1/10] duration-500 left-0 top-0 animate-opacity bg-primary'
                              style={{left: caretPosition.left, top: caretPosition.top}}></div> : null}
                     {
                         targetValue?.map((value: TextDataType, index: number) => {
@@ -99,7 +98,7 @@ const TextBoard = (props: TextBoardProps) => {
                                                 }
                                                 return (
                                                     <div key={letter + _index}
-                                                         className={`letter inline-block text-left font-semibold ${currentColor}`}>
+                                                         className={`letter inline-block text-left font-semibold text-[22px] ${currentColor}`}>
                                                         {letter}
                                                     </div>
                                                 );

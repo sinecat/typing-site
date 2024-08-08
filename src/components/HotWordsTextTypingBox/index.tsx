@@ -1,17 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
 import useTimer from "@/hooks/timer";
 import {getRandomData} from "@/utils/getRandomData";
-import {textData} from "@/constants/textData-zh";
-import {TextDataType} from "@/constants/common";
+import {textDataHotWordZh,textDataHotWordZhType} from "@/constants/text-data-hot-word-zh";
 import {Separator} from "@/components/ui/separator";
 import TextBoard from "@/components/TextBoard";
 import {Button} from "@/components/ui/button";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {RotateCcw, Terminal} from "lucide-react";
-import {Badge} from "@/components/ui/badge";
+import {RotateCcw} from "lucide-react";
 import {useToast} from "@/components/ui/use-toast";
-import './styles.css'
-import {Card} from "@/components/ui/card";
+import TypingResultBox from "@/components/TypingResultBox";
+import TypingTipAlert from "@/components/TypingTipAlert";
 
 const wordNumsConfig = [3, 20, 30, 40, 50]
 
@@ -32,8 +29,8 @@ const HotWordsTextTypingBox = () => {
         let value = event.target.value.replace('\n', '')
         if (value.length > targetValue?.strLength || value.length < successTextLength) return
         if (inputting) {
-            const inputLetter = value?.[value?.length-1]
-            const targetLetter = targetValue?.targetStr[value?.length-1]
+            const inputLetter = value?.[value?.length - 1]
+            const targetLetter = targetValue?.targetStr[value?.length - 1]
             if (inputLetter && targetLetter && inputLetter !== targetLetter) {
                 setErrorCount((prevState) => prevState + 1)
             }
@@ -55,11 +52,12 @@ const HotWordsTextTypingBox = () => {
     const freshData = (_wordNums: number) => {
         setIsFinished(false)
         setSuccessTextLength(0)
-        setTargetValue(getRandomData(textData, _wordNums))
-        setInputValue('')
-        setInputting(false)
+        setTargetValue(getRandomData(textDataHotWordZh, _wordNums))
         reset()
         setInputFocus()
+        setInputValue('')
+        setErrorCount(0)
+        setInputting(false)
     }
 
     const handleWordNumsClick = (num: number) => {
@@ -92,7 +90,7 @@ const HotWordsTextTypingBox = () => {
 
     useEffect(() => {
         const init = () => {
-            setTargetValue(getRandomData(textData, wordNums))
+            setTargetValue(getRandomData(textDataHotWordZh, wordNums))
 
             window.addEventListener('keydown', handleKeyDown);
 
@@ -107,7 +105,7 @@ const HotWordsTextTypingBox = () => {
     useEffect(() => {
         let result = 0
         const inputValueArr = inputValue.split(' ')
-        const targetValueArr = targetValue?.data?.map((item: TextDataType) => item.value)
+        const targetValueArr = targetValue?.data?.map((item: textDataHotWordZhType) => item.value)
         inputValueArr.forEach((item, index) => {
             const startIndex = inputValue.indexOf(targetValueArr?.[index])
             const endIndex = startIndex + targetValueArr?.[index]?.length
@@ -149,33 +147,24 @@ const HotWordsTextTypingBox = () => {
                     <div>Time: {time}S</div>
                 </div>
             </div>
-            <div className='flex flex-col items-center'>
+            <div className='flex flex-col items-center mt-10'>
                 {
-                    isFinished ? <div className='flex gap-20 pt-20 min-h-72 text-3xl justify-between'>
-                        <Card className='flex h-36 flex-col gap-5 text-3xl items-center justify-center p-5'>
-                            <span className='no-input'>Take Time</span>
-                            <span className='text-4xl text-primary'>{time}S</span>
-                        </Card>
-                        <Card className='flex h-36 flex-col gap-5 text-3xl items-center justify-center p-5'>
-                            <span className='no-input'>Error Count</span>
-                            <span className='text-4xl text-primary'>{errorCount}</span>
-                        </Card>
-                    </div> : <div className='flex flex-col items-center'>
-                        <TextBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data}
-                                   onClick={handleTextBoardClick}/>
-                        <input type="text" value={inputValue} onChange={handleInputChange} className='text-input'
-                               ref={inputRef}
-                               onBlur={handleBlur} onKeyDown={handleKeyDown}/>
-                        {isFocus && !inputting ?
-                            <Alert className='absolute top-0 w-80 mt-10 animate-bounce text-lg translate-y-96'>
-                                <AlertDescription className='text-lg'>
-                                    Press <Badge
-                                    className='bg-gray-100 text-primary text-lg font-light'>Enter</Badge> to
-                                    start typing
-                                </AlertDescription>
-                            </Alert> : null}
-                    </div>
+                    isFinished ?
+                        <TypingResultBox time={time} errorCount={errorCount} wordsLength={targetValue?.strLength}/> :
+                        <div className='flex flex-col items-center'>
+                            <TextBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data} onClick={handleTextBoardClick}/>
+                        </div>
                 }
+                {isFocus && !inputting ? <TypingTipAlert/> : null}
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    className='h-0 w-0 opacity-0'
+                    ref={inputRef}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                />
                 <Button className='w-30 mt-5 flex gap-2' onClick={handleFreshClick}><RotateCcw/>Refresh</Button>
             </div>
         </div>
