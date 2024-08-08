@@ -65,7 +65,7 @@ const TextBoard = (props: TextBoardProps) => {
             <div className='w-[1024px] min-h-72'>
                 <div className='text-board flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
                     {focus ?
-                        <div className='caret animate-opacity'
+                        <div className='caret animate-opacity bg-primary'
                              style={{left: caretPosition.left, top: caretPosition.top}}></div> : null}
                     {
                         targetValue?.map((value: TextDataType, index: number) => {
@@ -77,7 +77,7 @@ const TextBoard = (props: TextBoardProps) => {
                             const inputText = currentInputTextValueArr.join('');
                             const valueText = value.value;
                             if (valueText?.includes(inputText)) {
-                                currentTextColor = valueText?.length === inputText.length ? 'primary' : 'no-input';
+                                currentTextColor = valueText?.length === inputText.length ? 'text-primary' : 'no-input';
                             } else {
                                 currentTextColor = inputText ? 'danger' : 'no-input';
                             }
@@ -90,7 +90,7 @@ const TextBoard = (props: TextBoardProps) => {
                                                 let currentColor = '';
                                                 if (currentInputTextValueArr[_index]) {
                                                     if (currentInputTextValueArr[_index] === targetTextValueArr[_index]) {
-                                                        currentColor = 'primary';
+                                                        currentColor = 'text-primary';
                                                     } else {
                                                         currentColor = 'danger';
                                                     }

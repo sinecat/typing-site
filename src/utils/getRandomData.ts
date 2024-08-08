@@ -8,6 +8,7 @@ export const getRandomData = (dataArr: any[], num: number) => {
 
     return {
         data: result,
+        targetStr: result.map(item => item.value).join(''),
         strLength: result.reduce((acc, cur) => acc + cur.value.length, 0)
     }
 }
