@@ -124,7 +124,7 @@ const HotWordsTextTypingBox = () => {
 
     return (
         <div>
-            <div className='mt-5 p-2 flex items-start justify-between'>
+            <div className='mt-5 flex items-start justify-between'>
                 <div className="flex h-5 items-center space-x-4 font-semibold no-input cursor-pointer">
                     {
                         wordNumsConfig?.map((item, index) => {
@@ -143,8 +143,8 @@ const HotWordsTextTypingBox = () => {
                         })
                     }
                 </div>
-                <div className='result mr-40'>
-                    <div>Time: {time}S</div>
+                <div className='result pr-40'>
+                    <span>Time: {time}S</span>
                 </div>
             </div>
             <div className='flex flex-col items-center mt-10'>

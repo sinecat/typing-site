@@ -122,12 +122,12 @@ const SentenceTypingBox = () => {
     }, [targetValue])
 
     return (
-        <div className='flex flex-col justify-center items-center'>
-            <div className='w-full mt-5 p-2 flex items-start justify-between'>
+        <div className='flex mt-5 flex-col justify-center items-center'>
+            <div className='w-full flex items-start justify-between'>
                 <div className="flex h-5 items-center space-x-4 font-semibold no-input cursor-pointer">
                 </div>
-                <div className='result mr-40'>
-                    <div>Time: {time}S</div>
+                <div className='result pr-40'>
+                    <span>Time: {time}S</span>
                 </div>
             </div>
             {
