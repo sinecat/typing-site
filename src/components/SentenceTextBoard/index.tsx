@@ -1,4 +1,5 @@
 import React, {ComponentProps, useEffect, useMemo, useRef, useState} from 'react';
+import {cn} from "@/lib/utils";
 
 type SentenceTextBoardProps = ComponentProps<any> & {
     inputValue: string;
@@ -60,18 +61,21 @@ const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
                     {
                         targetValue?.map((word: string, index: number) => {
                             let currentColor = '';
+                            let currentBorderColor =''
                             if (inputValue[index]) {
                                 if (inputValue[index] === word) {
                                     currentColor = 'text-primary';
+                                    currentBorderColor = 'border-primary'
                                 } else {
                                     currentColor = 'danger';
+                                    currentBorderColor = 'border-red-500'
                                 }
                             } else {
                                 currentColor = 'no-input';
+                                currentBorderColor = 'border-gray-400'
                             }
                             return (
-                                <div key={word + index}
-                                     className={`letter inline-block text-center font-semibold w-[13px] h-10 ${currentColor}`}>
+                                <div key={word + index} className={`letter inline-block text-center font-semibold w-[13px] h-10 ${currentColor} border-b-2 ${currentBorderColor}`}>
                                     {word}
                                 </div>
                             );
