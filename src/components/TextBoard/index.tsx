@@ -61,8 +61,8 @@ const TextBoard = (props: TextBoardProps) => {
         }, [targetValue])
 
         return (
-            <div className='w-[1024px] min-h-72'>
-                <div className='relative p-5 w-[1024px] flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
+            <div className='w-max-[1024px] min-h-72'>
+                <div className='relative p-5 w-full flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
                     {focus ?
                         <div className='absolute w-[3px] h-[30px] translate-y-[-1/10] duration-500 left-0 top-0 animate-opacity bg-primary'
                              style={{left: caretPosition.left, top: caretPosition.top}}></div> : null}

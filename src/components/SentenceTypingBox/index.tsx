@@ -8,6 +8,7 @@ import {textDataHotWordZh} from "@/constants/text-data-hot-word-zh";
 import {textDataSentenceEn} from "@/constants/text-data-sentence-en";
 import TypingResultBox from "@/components/TypingResultBox";
 import TypingTipAlert from "@/components/TypingTipAlert";
+import SentenceTypingBoard from "@/components/SentenceTextBoard";
 
 const SentenceTypingBox = () => {
 
@@ -18,42 +19,16 @@ const SentenceTypingBox = () => {
     const [isFocus, setIsFocus] = useState(false)
     const [inputting, setInputting] = useState(false)
     const [errorCount, setErrorCount] = useState(0)
-    const [letterDomArr, setLetterDomArr] = useState<any>()
-    const textBoardRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const caretPosition = useMemo(() => {
-        const currentCaretIndex = inputValue.length || 0;
-        const currentLetterDom = letterDomArr?.[currentCaretIndex];
-        let result = {
-            left: '0px',
-            top: '0px'
-        }
-        if (currentCaretIndex === targetValue?.length && textBoardRef.current) {
-            const textBoardRect = textBoardRef.current.getBoundingClientRect();
-            const caretRect = letterDomArr[targetValue?.length - 1]?.getBoundingClientRect();
-            const caretLeft = caretRect.right - textBoardRect.left;
-            const caretTop = caretRect.top - textBoardRect.top;
-            result = {
-                left: `${caretLeft}px`,
-                top: `${caretTop}px`
-            }
-            return result
-        }
-        if (textBoardRef.current && currentLetterDom) {
-            const textBoardRect = textBoardRef.current.getBoundingClientRect();
-            const caretRect = currentLetterDom.getBoundingClientRect();
-            const caretLeft = caretRect.left - textBoardRect.left;
-            const caretTop = caretRect.top - textBoardRect.top;
-            result = {
-                left: `${caretLeft}px`,
-                top: `${caretTop}px`
-            }
-        }
-        return result
-    }, [inputValue, letterDomArr, targetValue])
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!inputting) return
         let value = event.target.value.replace('\n', '')
+        const inputLetter = value?.[value?.length - 1]
+        const targetLetter = targetValue?.data[value?.length - 1]
+        if (inputLetter && targetLetter && inputLetter !== targetLetter) {
+            setErrorCount((prevState) => prevState + 1)
+        }
         setInputValue(value)
     }
 
@@ -77,7 +52,7 @@ const SentenceTypingBox = () => {
         setInputting(false)
     }
 
-    const handleBoardClick = () => {
+    const handleSentenceTypingBoardClick = () => {
         setInputFocus()
     }
 
@@ -116,11 +91,6 @@ const SentenceTypingBox = () => {
         init()
     }, []);
 
-    useEffect(() => {
-        let letterDomArr = document.querySelectorAll('.letter')
-        setLetterDomArr(letterDomArr)
-    }, [targetValue])
-
     return (
         <div className='flex mt-5 flex-col justify-center items-center'>
             <div className='w-full flex items-start justify-between'>
@@ -132,37 +102,7 @@ const SentenceTypingBox = () => {
             </div>
             {
                 isFinished ? <TypingResultBox time={time} errorCount={errorCount} wordsLength={targetValue?.length}/> :
-                    <div className='flex flex-col items-center mt-10 w-[1024px] min-h-72' ref={textBoardRef}
-                         onClick={handleBoardClick}>
-                        <div className='relative p-5 w-full flex flex-wrap gap-4'>
-                            <div className='word flex flex-wrap text-xl text-center items-start'>
-                                {isFocus ?
-                                    <div
-                                        className='absolute w-[3px] h-[30px] translate-y-[-1/10] duration-500 left-0 top-0 animate-opacity bg-primary'
-                                        style={{left: caretPosition.left, top: caretPosition.top}}></div> : null}
-                                {
-                                    targetValue?.data?.split('').map((word: string, index: number) => {
-                                        let currentColor = '';
-                                        if (inputValue[index]) {
-                                            if (inputValue[index] === word) {
-                                                currentColor = 'text-primary';
-                                            } else {
-                                                currentColor = 'danger';
-                                            }
-                                        } else {
-                                            currentColor = 'no-input';
-                                        }
-                                        return (
-                                            <div key={word + index}
-                                                 className={`letter inline-block text-center font-semibold w-[13px] h-10 ${currentColor}`}>
-                                                {word}
-                                            </div>
-                                        );
-                                    })
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <SentenceTypingBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data?.split('')} onClick={handleSentenceTypingBoardClick}/>
             }
             {isFocus && !inputting ? <TypingTipAlert/> : null}
             <input

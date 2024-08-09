@@ -121,7 +121,6 @@ const HotWordsTextTypingBox = () => {
         setSuccessTextLength(result)
     }, [inputValue, targetValue])
 
-
     return (
         <div>
             <div className='mt-5 flex items-start justify-between'>
