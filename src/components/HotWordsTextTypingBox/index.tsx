@@ -77,8 +77,10 @@ const HotWordsTextTypingBox = () => {
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter' && isFocus && !isFinished) {
-            //设置光标在最后
-            inputRef.current.selectionStart = inputRef.current.selectionEnd = inputValue.length;
+            if(inputRef?.current){
+                //设置光标在最后
+                inputRef.current.selectionStart = inputRef.current.selectionEnd = inputValue.length;
+            }
             setInputting(true)
             start()
         }
