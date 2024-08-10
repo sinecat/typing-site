@@ -50,7 +50,7 @@ const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
     }, [targetValue])
 
     return (
-        <div className='flex flex-col items-center mt-10 w-max-[1024px] min-h-72' ref={textBoardRef}
+        <div className='flex flex-col items-center mt-10 max-w-5xl min-h-72' ref={textBoardRef}
              onClick={onClick}>
             <div className='relative p-5 w-full flex flex-wrap gap-4'>
                 <div className='word flex flex-wrap text-xl text-center items-start'>

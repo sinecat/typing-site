@@ -61,7 +61,7 @@ const TextBoard = (props: TextBoardProps) => {
         }, [targetValue])
 
         return (
-            <div className='w-max-[1024px] min-h-72'>
+            <div className='max-w-5xl min-h-72'>
                 <div className='relative p-5 w-full flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
                     {focus ?
                         <div className='absolute w-[3px] h-[30px] translate-y-[-1/10] duration-500 left-0 top-0 animate-opacity bg-primary'
@@ -81,7 +81,7 @@ const TextBoard = (props: TextBoardProps) => {
                                 currentTextColor = inputText ? 'danger' : 'no-input';
                             }
                             return (
-                                <div key={index} className='word flex flex-col gap-1 text-xl text-center'>
+                                <div key={index} className='word flex flex-col gap-1 text-base text-center'>
                                     <div className={`label ${currentTextColor}`}>{value.text}</div>
                                     <div className='letters flex gap-0.5'>
                                         {

@@ -10,6 +10,7 @@ import TypingResultBox from "@/components/TypingResultBox";
 import TypingTipAlert from "@/components/TypingTipAlert";
 import SentenceTypingBoard from "@/components/SentenceTextBoard";
 import {textDataSentenceZh} from "@/constants/text-data-sentence-zh";
+import {Textarea} from "@/components/ui/textarea";
 
 type SentenceTypingBoxProps = {
     type: 'chinese' | 'english'
@@ -24,17 +25,17 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
     const [isFocus, setIsFocus] = useState(false)
     const [inputting, setInputting] = useState(false)
     const [errorCount, setErrorCount] = useState(0)
-    const inputRef = useRef<HTMLInputElement>(null)
+    const inputRef = useRef<HTMLTextAreaElement>(null)
 
-    const setCurrentDataValue = ()=>{
-        if(type==='chinese'){
+    const setCurrentDataValue = () => {
+        if (type === 'chinese') {
             setTargetValue(getRandomDataSentence(textDataSentenceZh))
             return
         }
         setTargetValue(getRandomDataSentence(textDataSentenceEn))
     }
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         console.log(inputting)
         if (!inputting) return
         let value = event.target.value.replace('\n', '')
@@ -84,7 +85,7 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter' && isFocus && !isFinished) {
-            if(inputRef?.current){
+            if (inputRef?.current) {
                 //设置光标在最后
                 inputRef.current.selectionStart = inputRef.current.selectionEnd = inputValue.length;
             }
@@ -127,17 +128,19 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
                                          onClick={handleSentenceTypingBoardClick}/>
             }
             {isFocus && !inputting ? <TypingTipAlert/> : null}
-            <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                className='h-0 w-0 opacity-0'
-                ref={inputRef}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-            />
+            <div className='w-[1000px]'>
+                <Textarea
+                    className='w-full'
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    // className='h-0 w-0 opacity-0'
+                    ref={inputRef}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                />
+            </div>
             <div>
-                <Button className='w-30 mt-5 flex gap-2' onClick={handleFreshClick}><RotateCcw/>Refresh</Button>
+                <Button className='w-30 mt-10 flex gap-2' onClick={handleFreshClick}><RotateCcw/>Refresh</Button>
             </div>
         </div>
     );
