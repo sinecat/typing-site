@@ -77,6 +77,12 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
         freshData()
     }
 
+    const handleTextareaClick = ()=>{
+        if (!isFocus) {
+            setInputFocus()
+        }
+    }
+
     const handleBlur = () => {
         pause()
         setInputting(false)
@@ -133,6 +139,7 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
                     className='w-full'
                     value={inputValue}
                     onChange={handleInputChange}
+                    onClick={handleTextareaClick}
                     // className='h-0 w-0 opacity-0'
                     ref={inputRef}
                     onBlur={handleBlur}
