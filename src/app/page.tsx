@@ -12,13 +12,17 @@ const Page = () => {
                 <Tabs defaultValue="chinese" className="w-full items-start">
                     <TabsList>
                         <TabsTrigger value="chinese">Chinese Hot Words</TabsTrigger>
-                        <TabsTrigger value="english">English Sentence</TabsTrigger>
+                        <TabsTrigger value="english-sentence">English Sentence</TabsTrigger>
+                        <TabsTrigger value="chinese-sentence">Chinese Sentence</TabsTrigger>
                     </TabsList>
                     <TabsContent value="chinese">
                         <HotWordsTextTypingBox />
                     </TabsContent>
-                    <TabsContent value="english">
-                        <SentenceTypingBox />
+                    <TabsContent value="english-sentence">
+                        <SentenceTypingBox type='english'/>
+                    </TabsContent>
+                    <TabsContent value="chinese-sentence">
+                        <SentenceTypingBox type='chinese'/>
                     </TabsContent>
                 </Tabs>
             </div>

@@ -9,9 +9,14 @@ import {textDataSentenceEn} from "@/constants/text-data-sentence-en";
 import TypingResultBox from "@/components/TypingResultBox";
 import TypingTipAlert from "@/components/TypingTipAlert";
 import SentenceTypingBoard from "@/components/SentenceTextBoard";
+import {textDataSentenceZh} from "@/constants/text-data-sentence-zh";
 
-const SentenceTypingBox = () => {
+type SentenceTypingBoxProps = {
+    type: 'chinese' | 'english'
+}
 
+const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
+    const {type} = props
     const {time, start, pause, reset, end} = useTimer();
     const [inputValue, setInputValue] = useState('')
     const [targetValue, setTargetValue] = useState<any>()
@@ -21,15 +26,25 @@ const SentenceTypingBox = () => {
     const [errorCount, setErrorCount] = useState(0)
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const setCurrentDataValue = ()=>{
+        if(type==='chinese'){
+            setTargetValue(getRandomDataSentence(textDataSentenceZh))
+            return
+        }
+        setTargetValue(getRandomDataSentence(textDataSentenceEn))
+    }
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(inputting)
         if (!inputting) return
         let value = event.target.value.replace('\n', '')
         const inputLetter = value?.[value?.length - 1]
         const targetLetter = targetValue?.data[value?.length - 1]
+        console.log(value)
+        setInputValue(value)
         if (inputLetter && targetLetter && inputLetter !== targetLetter) {
             setErrorCount((prevState) => prevState + 1)
         }
-        setInputValue(value)
     }
 
     const setInputFocus = () => {
@@ -46,6 +61,7 @@ const SentenceTypingBox = () => {
     const freshData = (_wordNums?: number) => {
         setIsFinished(false)
         reset()
+        setCurrentDataValue()
         setInputFocus()
         setInputValue('')
         setErrorCount(0)
@@ -68,6 +84,8 @@ const SentenceTypingBox = () => {
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter' && isFocus && !isFinished) {
+            //设置光标在最后
+            inputRef.current.selectionStart = inputRef.current.selectionEnd = inputValue.length;
             setInputting(true)
             start()
         }
@@ -82,7 +100,7 @@ const SentenceTypingBox = () => {
 
     useEffect(() => {
         const init = () => {
-            setTargetValue(getRandomDataSentence(textDataSentenceEn))
+            setCurrentDataValue()
             window.addEventListener('keydown', handleKeyDown);
             return () => {
                 window.removeEventListener('keydown', handleKeyDown);
@@ -102,7 +120,9 @@ const SentenceTypingBox = () => {
             </div>
             {
                 isFinished ? <TypingResultBox time={time} errorCount={errorCount} wordsLength={targetValue?.length}/> :
-                    <SentenceTypingBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data?.split('')} onClick={handleSentenceTypingBoardClick}/>
+                    <SentenceTypingBoard focus={isFocus} inputValue={inputValue}
+                                         targetValue={targetValue?.data?.split('')}
+                                         onClick={handleSentenceTypingBoardClick}/>
             }
             {isFocus && !inputting ? <TypingTipAlert/> : null}
             <input

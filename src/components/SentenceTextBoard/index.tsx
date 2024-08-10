@@ -75,7 +75,7 @@ const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
                                 currentBorderColor = 'border-gray-400'
                             }
                             return (
-                                <div key={word + index} className={`letter inline-block text-center font-semibold w-[13px] h-10 ${currentColor} border-b-2 ${currentBorderColor}`}>
+                                <div key={word + index} className={`letter inline-block text-center font-semibold min-w-[13px] mt-3 h-10 ${currentColor} border-b-2 ${currentBorderColor}`}>
                                     {word}
                                 </div>
                             );
