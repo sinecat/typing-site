@@ -1,0 +1,27 @@
+{
+  "Navigation": {
+    "chineseHotWords": "Chinese Hot Words",
+    "englishSentence": "English Sentence",
+    "chineseSentence": "Chinese Sentence",
+    "Fingering": "Fingering",
+    "chinese": "Chinese",
+    "english": "English"
+  },
+  "HeaderBar": {
+    "takeTime": "Take Time"
+  },
+  "Button": {
+    "refresh": "Refresh"
+  },
+  "Tip": {
+    "PromptsToChangeInputMethod": {
+      "title": "Tip",
+      "content": "To facilitate input, you are advised to switch to the English input method"
+    }
+  },
+  "FingeringOptions": {
+    "total": "Total",
+    "leftHand": "LeftHand",
+    "rightHand": "RightHand"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "Navigation": {
+    "chineseHotWords": "中文热门词",
+    "englishSentence": "英文句子",
+    "chineseSentence": "中文句子",
+    "Fingering": "指法练习",
+    "chinese": "中文",
+    "english": "英文"
+  },
+  "HeaderBar": {
+    "takeTime": "用时"
+  },
+  "Button": {
+    "refresh": "刷新"
+  },
+  "Tip": {
+    "PromptsToChangeInputMethod": {
+      "title": "提示",
+      "content": "为方便输入，建议切换为英文输入法"
+    }
+  },
+  "FingeringOptions": {
+    "total": "全部",
+    "leftHand": "左手模式",
+    "rightHand": "右手模式"
+  }
+}

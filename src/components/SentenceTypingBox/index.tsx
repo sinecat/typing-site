@@ -1,3 +1,4 @@
+'use client'
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Button} from "@/components/ui/button";
 import {RotateCcw} from "lucide-react";
@@ -11,6 +12,10 @@ import TypingTipAlert from "@/components/TypingTipAlert";
 import SentenceTypingBoard from "@/components/SentenceTextBoard";
 import {textDataSentenceZh} from "@/constants/text-data-sentence-zh";
 import {Textarea} from "@/components/ui/textarea";
+import HeaderBar from "@/components/HeaderBar";
+import FreshButton from "@/components/FreshButton";
+import {useTranslations} from "next-intl";
+import {usePromptsToChangeInputMethod} from "@/hooks/prompt";
 
 type SentenceTypingBoxProps = {
     type: 'chinese' | 'english'
@@ -19,6 +24,9 @@ type SentenceTypingBoxProps = {
 const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
     const {type} = props
     const {time, start, pause, reset, end} = useTimer();
+    const t = useTranslations('Tip.PromptsToChangeInputMethod')
+    const promptsToChangeInputMethod = usePromptsToChangeInputMethod(t)
+
     const [inputValue, setInputValue] = useState('')
     const [targetValue, setTargetValue] = useState<any>()
     const [isFinished, setIsFinished] = useState(false)
@@ -36,12 +44,13 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
     }
 
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        console.log(inputting)
-        if (!inputting) return
+        if (!inputting) {
+            setInputting(true)
+            start()
+        }
         let value = event.target.value.replace('\n', '')
         const inputLetter = value?.[value?.length - 1]
         const targetLetter = targetValue?.data[value?.length - 1]
-        console.log(value)
         setInputValue(value)
         if (inputLetter && targetLetter && inputLetter !== targetLetter) {
             setErrorCount((prevState) => prevState + 1)
@@ -50,12 +59,13 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
 
     const setInputFocus = () => {
         if (inputRef.current) {
+            //设置光标在最后
             inputRef.current.focus();
+            inputRef.current.selectionStart = inputRef.current.selectionEnd = inputValue.length;
+
             setIsFocus(true)
-            toast({
-                title: "TIP",
-                description: "Please switch to English input method",
-            })
+
+            promptsToChangeInputMethod()
         }
     }
 
@@ -77,7 +87,7 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
         freshData()
     }
 
-    const handleTextareaClick = ()=>{
+    const handleTextareaClick = () => {
         if (!isFocus) {
             setInputFocus()
         }
@@ -91,10 +101,6 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter' && isFocus && !isFinished) {
-            if (inputRef?.current) {
-                //设置光标在最后
-                inputRef.current.selectionStart = inputRef.current.selectionEnd = inputValue.length;
-            }
             setInputting(true)
             start()
         }
@@ -119,36 +125,25 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
     }, []);
 
     return (
-        <div className='flex mt-5 flex-col justify-center items-center'>
-            <div className='w-full flex items-start justify-between'>
-                <div className="flex h-5 items-center space-x-4 font-semibold no-input cursor-pointer">
-                </div>
-                <div className='result pr-40'>
-                    <span>Time: {time}S</span>
-                </div>
-            </div>
+        <div className='w-full flex flex-col justify-center items-center'>
+            <HeaderBar showTab={false} time={time}/>
             {
                 isFinished ? <TypingResultBox time={time} errorCount={errorCount} wordsLength={targetValue?.length}/> :
                     <SentenceTypingBoard focus={isFocus} inputValue={inputValue}
                                          targetValue={targetValue?.data?.split('')}
                                          onClick={handleSentenceTypingBoardClick}/>
             }
-            {isFocus && !inputting ? <TypingTipAlert/> : null}
-            <div className='w-[1000px]'>
-                <Textarea
-                    className='w-full'
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    onClick={handleTextareaClick}
-                    // className='h-0 w-0 opacity-0'
-                    ref={inputRef}
-                    onBlur={handleBlur}
-                    onKeyDown={handleKeyDown}
-                />
-            </div>
-            <div>
-                <Button className='w-30 mt-10 flex gap-2' onClick={handleFreshClick}><RotateCcw/>Refresh</Button>
-            </div>
+            {/*{isFocus && !inputting ? <TypingTipAlert/> : null}*/}
+            <Textarea
+                className='w-8/12'
+                value={inputValue}
+                onChange={handleInputChange}
+                onClick={handleTextareaClick}
+                ref={inputRef}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+            />
+            <FreshButton onClick={handleFreshClick}/>
         </div>
     );
 };

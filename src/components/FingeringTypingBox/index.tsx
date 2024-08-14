@@ -1,43 +1,29 @@
-import React, {useState} from 'react';
-import {Separator} from "@/components/ui/separator";
+'use client'
+import React, {useMemo, useState} from 'react';
 import FingeringBoard from "@/components/FingeringBoard";
-
-const fingeringTypeConfig = [
-    'total',
-    'leftHand',
-    'rightHand'
-]
+import HeaderBar from "@/components/HeaderBar";
+import {useTranslations} from "next-intl";
 
 const FingeringTypingBox = () => {
-    const [selectedFingeringType,setSelectedFingeringType] = useState('total')
+    const [selectedFingeringType, setSelectedFingeringType] = useState('total')
+    const t = useTranslations('FingeringOptions')
 
-    const handleFingeringTypeClick = (item:string)=>{
-        setSelectedFingeringType(item)
+    const fingeringTypeConfig = useMemo(() => (
+        [
+            t('total'),
+            t('leftHand'),
+            t('rightHand')
+        ]
+    ), [t])
+
+    const handleFingeringTypeClick = (val: string) => {
+        setSelectedFingeringType(val)
     }
 
     return (
         <div>
-            <div className='mt-5 flex items-start justify-between'>
-                <div className="flex h-5 items-center space-x-4 font-semibold no-input cursor-pointer">
-                    {
-                        fingeringTypeConfig?.map((item, index) => {
-                            return (
-                                <div key={'word-num-box' + item}>
-                                    <div key={'word-num' + item}
-                                         className={`${selectedFingeringType === item ? 'text-primary' : ''}`}
-                                         onClick={() => handleFingeringTypeClick(item)}
-                                    >
-                                        {item}
-                                    </div>
-                                    {index === fingeringTypeConfig.length - 1 ? null :
-                                        <Separator key={'Separator-word-num' + item} className='bg-primary'
-                                                   orientation="vertical"/>}
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-            </div>
+            <HeaderBar options={fingeringTypeConfig} value={selectedFingeringType} showTime={false}
+                       onValueChange={handleFingeringTypeClick}/>
             <FingeringBoard
                 type={selectedFingeringType}
             />
