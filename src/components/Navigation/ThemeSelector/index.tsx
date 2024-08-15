@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Menubar,
     MenubarContent,
@@ -10,11 +10,12 @@ import {
     MenubarTrigger
 } from "@/components/ui/menubar";
 import {MonitorCog, Moon, Sun} from "lucide-react";
-import {getSystemTheme, setTheme} from "@/utils/spaghetti";
+import {getSystemTheme, initTheme, setTheme} from "@/utils/spaghetti";
+
 
 
 const ThemeSelector = () => {
-    const [value, setValue] = useState('dark')
+    const [value, setValue] = useState(initTheme())
 
     const handleThemeChange = (theme: string) => {
         let currentTheme = theme

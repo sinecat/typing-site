@@ -1,5 +1,8 @@
 export const initTheme: () => string = () => {
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    const allCookies = document.cookie;
+    const themeCookie = allCookies.split('; ').find(row => row.startsWith('theme='))?.split('=')[1];
+
+    if (themeCookie === 'dark' || (!themeCookie && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
         return 'dark'
     } else {
