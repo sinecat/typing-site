@@ -7,7 +7,7 @@ const FreshButton = (props: ButtonProps) => {
     const t = useTranslations('Button')
 
     return (
-        <Button className='w-30 mt-5 flex gap-2' {...props}><RotateCcw/>{t('refresh')}</Button>
+        <Button className='w-30 mt-5 flex gap-2 text-white' {...props}><RotateCcw/>{t('refresh')}</Button>
     );
 };
 
