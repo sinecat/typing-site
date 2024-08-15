@@ -64,7 +64,7 @@ const HotWordsTextTypingBox = () => {
         setInputting(false)
     }
 
-    const handleWordNumsClick = (val:number) => {
+    const handleWordNumsClick = (val: number) => {
         if (wordNums !== val) {
             setWordNums(val)
             freshData(val)
@@ -137,10 +137,8 @@ const HotWordsTextTypingBox = () => {
                 {
                     isFinished ?
                         <TypingResultBox time={time} errorCount={errorCount} wordsLength={targetValue?.strLength}/> :
-                        <div className='flex flex-col items-center'>
-                            <TextBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data}
-                                       onClick={handleTextBoardClick}/>
-                        </div>
+                        <TextBoard focus={isFocus} inputValue={inputValue} targetValue={targetValue?.data}
+                                   onClick={handleTextBoardClick}/>
                 }
                 {/*{isFocus && !inputting ? <TypingTipAlert/> : null}*/}
                 <Textarea

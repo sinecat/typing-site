@@ -1,6 +1,8 @@
 'use client'
 import React, {ComponentProps, useEffect, useMemo, useRef, useState} from 'react';
 import {TextDataType} from "@/constants/common";
+import Cursor from "@/components/Cursor";
+import {cn} from "@/lib/utils";
 
 type TextBoardProps = ComponentProps<any> & {
     inputValue: string;
@@ -18,33 +20,37 @@ const TextBoard = (props: TextBoardProps) => {
 
         const caretPosition = useMemo(() => {
             const currentCaretIndex = inputValue.length || 0;
-            const currentLetterDom = letterDomArr?.[currentCaretIndex];
             let result = {
-                left: '0px',
-                top: '0px'
-            }
-            if (currentCaretIndex === targetValueLength && textBoardRef.current) {
-                const textBoardRect = textBoardRef.current.getBoundingClientRect();
-                const caretRect = letterDomArr[targetValueLength - 1]?.getBoundingClientRect();
-                const caretLeft = caretRect.right - textBoardRect.left;
-                const caretTop = caretRect.top - textBoardRect.top;
-                result = {
-                    left: `${caretLeft}px`,
-                    top: `${caretTop}px`
+                left: 0,
+                top: 0
+            };
+
+            if (!textBoardRef.current) return result;
+
+            const textBoardRect = textBoardRef.current.getBoundingClientRect();
+
+            if (currentCaretIndex === targetValueLength) {
+                const lastLetterDom = letterDomArr[targetValueLength - 1];
+                if (lastLetterDom) {
+                    const caretRect = lastLetterDom.getBoundingClientRect();
+                    result = {
+                        left: caretRect.right - textBoardRect.left,
+                        top: caretRect.top - textBoardRect.top
+                    };
                 }
-                return result
+                return result;
             }
-            if (textBoardRef.current && currentLetterDom) {
-                const textBoardRect = textBoardRef.current.getBoundingClientRect();
+
+            const currentLetterDom = letterDomArr[currentCaretIndex];
+            if (currentLetterDom) {
                 const caretRect = currentLetterDom.getBoundingClientRect();
-                const caretLeft = caretRect.left - textBoardRect.left;
-                const caretTop = caretRect.top - textBoardRect.top;
                 result = {
-                    left: `${caretLeft}px`,
-                    top: `${caretTop}px`
-                }
+                    left: caretRect.left - textBoardRect.left,
+                    top: caretRect.top - textBoardRect.top
+                };
             }
-            return result
+
+            return result;
         }, [inputValue, letterDomArr, targetValueLength])
 
         const getTextStartIndex = (index: number) => {
@@ -64,41 +70,37 @@ const TextBoard = (props: TextBoardProps) => {
             <div className='max-w-5xl min-h-72'>
                 <div className='relative p-5 w-full flex flex-wrap gap-4' ref={textBoardRef} onClick={onClick}>
                     {focus ?
-                        <div className='absolute w-[3px] h-[30px] translate-y-[-1/10] duration-500 left-0 top-0 animate-opacity bg-primary'
-                             style={{left: caretPosition.left, top: caretPosition.top}}></div> : null}
+                        <Cursor left={caretPosition.left} top={caretPosition.top}/> : null}
                     {
                         targetValue?.map((value: TextDataType, index: number) => {
                             const currentInputTextStartIndex = getTextStartIndex(index);
                             const currentInputTextEndIndex = currentInputTextStartIndex + value.value.length;
                             const currentInputTextValueArr = inputLettersValueArr.slice(currentInputTextStartIndex, currentInputTextEndIndex)
                             const targetTextValueArr = value.value.split('');
-                            let currentTextColor = 'no-input';
                             const inputText = currentInputTextValueArr.join('');
                             const valueText = value.value;
-                            if (valueText?.includes(inputText)) {
-                                currentTextColor = valueText?.length === inputText.length ? 'text-primary' : 'no-input';
-                            } else {
-                                currentTextColor = inputText ? 'danger' : 'no-input';
-                            }
+
+                            const currentTextColor = cn({
+                                'text-primary': valueText.length === inputText.length && valueText.includes(inputText),
+                                'danger': !valueText.includes(inputText) && inputText,
+                                'no-input': !inputText || (valueText.includes(inputText) && valueText.length !== inputText.length),
+                            });
+
                             return (
                                 <div key={index} className='word flex flex-col gap-1 text-base text-center'>
-                                    <div className={`label ${currentTextColor}`}>{value.text}</div>
+                                    <div className={cn('label', currentTextColor)}>{value.text}</div>
                                     <div className='letters flex gap-0.5'>
                                         {
                                             targetTextValueArr.map((letter: string, _index: number) => {
-                                                let currentColor = '';
-                                                if (currentInputTextValueArr[_index]) {
-                                                    if (currentInputTextValueArr[_index] === targetTextValueArr[_index]) {
-                                                        currentColor = 'text-primary';
-                                                    } else {
-                                                        currentColor = 'danger';
-                                                    }
-                                                } else {
-                                                    currentColor = 'no-input';
-                                                }
+                                                const currentColor = cn({
+                                                    'text-primary': currentInputTextValueArr[_index] === targetTextValueArr[_index],
+                                                    'danger': currentInputTextValueArr[_index] && currentInputTextValueArr[_index] !== targetTextValueArr[_index],
+                                                    'no-input': !currentInputTextValueArr[_index],
+                                                });
+
                                                 return (
                                                     <div key={letter + _index}
-                                                         className={`letter inline-block text-left font-semibold text-[22px] ${currentColor}`}>
+                                                         className={cn('letter inline-block text-left font-semibold text-[22px]', currentColor)}>
                                                         {letter}
                                                     </div>
                                                 );

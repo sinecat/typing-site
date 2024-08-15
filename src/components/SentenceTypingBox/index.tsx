@@ -135,7 +135,7 @@ const SentenceTypingBox = (props: SentenceTypingBoxProps) => {
             }
             {/*{isFocus && !inputting ? <TypingTipAlert/> : null}*/}
             <Textarea
-                className='w-8/12'
+                className='w-1/3'
                 value={inputValue}
                 onChange={handleInputChange}
                 onClick={handleTextareaClick}

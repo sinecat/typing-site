@@ -63,14 +63,10 @@ const FingeringBoard = (props: FingeringBoardProps) => {
             getRandomKey()
             inputRef.current?.focus()
             setIsFocus(true)
-            toast({
-                title: "TIP",
-                description: "Now you can practice fingering",
-            })
         }
 
         init()
-    }, [type]);
+    }, [getRandomKey, type]);
 
     return (
         <div className='flex justify-center w-full mt-24'>

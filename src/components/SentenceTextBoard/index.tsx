@@ -1,5 +1,6 @@
 import React, {ComponentProps, useEffect, useMemo, useRef, useState} from 'react';
 import {cn} from "@/lib/utils";
+import Cursor from "@/components/Cursor";
 
 type SentenceTextBoardProps = ComponentProps<any> & {
     inputValue: string;
@@ -8,7 +9,7 @@ type SentenceTextBoardProps = ComponentProps<any> & {
     focus?: boolean;
 }
 
-const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
+const SentenceTypingBoard = (props: SentenceTextBoardProps) => {
     const {inputValue, targetValue, onClick, focus} = props;
     const textBoardRef = useRef<HTMLDivElement>(null)
     const [letterDomArr, setLetterDomArr] = useState<any>()
@@ -17,8 +18,8 @@ const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
         const currentCaretIndex = inputValue.length || 0;
         const currentLetterDom = letterDomArr?.[currentCaretIndex];
         let result = {
-            left: '0px',
-            top: '0px'
+            left: 0,
+            top: 0
         }
         if (currentCaretIndex === targetValue?.length && textBoardRef.current) {
             const textBoardRect = textBoardRef.current.getBoundingClientRect();
@@ -26,8 +27,8 @@ const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
             const caretLeft = caretRect.right - textBoardRect.left;
             const caretTop = caretRect.top - textBoardRect.top;
             result = {
-                left: `${caretLeft}px`,
-                top: `${caretTop}px`
+                left: caretLeft,
+                top: caretTop
             }
             return result
         }
@@ -37,8 +38,8 @@ const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
             const caretLeft = caretRect.left - textBoardRect.left;
             const caretTop = caretRect.top - textBoardRect.top;
             result = {
-                left: `${caretLeft}px`,
-                top: `${caretTop}px`
+                left: caretLeft,
+                top: caretTop
             }
         }
         return result
@@ -50,32 +51,35 @@ const SentenceTypingBoard = (props:SentenceTextBoardProps) => {
     }, [targetValue])
 
     return (
-        <div className='flex flex-col items-center mt-10 max-w-5xl min-h-72' ref={textBoardRef}
+        <div className='mt-10 max-w-5xl min-h-72' ref={textBoardRef}
              onClick={onClick}>
             <div className='relative p-5 w-full flex flex-wrap gap-4'>
                 <div className='word flex flex-wrap text-xl text-center items-start'>
                     {focus ?
-                        <div
-                            className='absolute w-[3px] h-[30px] translate-y-[-1/10] duration-500 left-0 top-0 animate-opacity bg-primary'
-                            style={{left: caretPosition.left, top: caretPosition.top}}></div> : null}
+                        <Cursor left={caretPosition.left} top={caretPosition.top}/> : null}
                     {
                         targetValue?.map((word: string, index: number) => {
-                            let currentColor = '';
-                            let currentBorderColor =''
-                            if (inputValue[index]) {
-                                if (inputValue[index] === word) {
-                                    currentColor = 'text-primary';
-                                    currentBorderColor = 'border-primary'
-                                } else {
-                                    currentColor = 'danger';
-                                    currentBorderColor = 'border-red-500'
-                                }
-                            } else {
-                                currentColor = 'no-input';
-                                currentBorderColor = 'border-gray-400'
-                            }
+                            const currentColor = cn({
+                                'text-primary': inputValue[index] === word,
+                                'danger': inputValue[index] && inputValue[index] !== word,
+                                'no-input': !inputValue[index],
+                            });
+
+                            const currentBorderColor = cn({
+                                'border-primary': inputValue[index] === word,
+                                'border-red-500': inputValue[index] && inputValue[index] !== word,
+                                'border-gray-400': !inputValue[index],
+                            });
+
                             return (
-                                <div key={word + index} className={`letter inline-block text-center font-semibold min-w-[13px] mt-3 h-10 ${currentColor} border-b-2 ${currentBorderColor}`}>
+                                <div
+                                    key={word + index}
+                                    className={cn(
+                                        'letter inline-block text-center font-semibold min-w-[13px] mt-3 h-10 border-b-2',
+                                        currentColor,
+                                        currentBorderColor
+                                    )}
+                                >
                                     {word}
                                 </div>
                             );
