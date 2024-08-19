@@ -1,3 +1,4 @@
+'use client'
 import React, {useEffect, useRef, useState} from 'react';
 import useTimer from "@/hooks/timer";
 import {getRandomData} from "@/utils/getRandomData";
