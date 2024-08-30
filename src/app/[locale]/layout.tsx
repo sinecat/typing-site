@@ -27,7 +27,7 @@ export default async function RootLayout({children, params: {locale}}: Readonly<
         <body className={inter.className + 'font-serif'}>
         <NextIntlClientProvider messages={messages}>
             <div className='p-5'>
-                <Navigation />
+                <Navigation theme={theme}/>
                 {children}
                 <Toaster/>
             </div>

@@ -10,12 +10,12 @@ import {
     MenubarTrigger
 } from "@/components/ui/menubar";
 import {MonitorCog, Moon, Sun} from "lucide-react";
-import {getSystemTheme, initTheme, setTheme} from "@/utils/spaghetti";
+import {getSystemTheme, setTheme} from "@/utils/spaghetti";
 
+type Themes = 'light' | 'dark';
 
-
-const ThemeSelector = () => {
-    const [value, setValue] = useState(initTheme())
+const ThemeSelector = ({theme}:{theme:string}) => {
+    const [value, setValue] = useState(theme)
 
     const handleThemeChange = (theme: string) => {
         let currentTheme = theme
@@ -23,8 +23,23 @@ const ThemeSelector = () => {
             currentTheme = getSystemTheme()
         }
         setValue(currentTheme)
-        setTheme(currentTheme as 'light' | 'dark')
+        setTheme(currentTheme as Themes)
     }
+
+    // 监听本地缓存来同步不同页面间的主题
+    useEffect(() => {
+        const checkTheme = (): void => {
+            const item = (localStorage.getItem("theme") as Themes) || 'light';
+            setValue(item)
+            setTheme(item);
+            document.getElementsByTagName("html")[0].dataset.theme = item;
+        };
+        checkTheme();
+        window.addEventListener("storage", checkTheme);
+        return (): void => {
+            window.removeEventListener("storage", checkTheme);
+        };
+    }, []);
 
     return (
         <Menubar>
